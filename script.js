@@ -1,174 +1,149 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const searchInput = document.getElementById('searchInput');
-    const menuItemsContainer = document.querySelector('.menu-items');
-    const categories = document.querySelectorAll('.menu-category');
-    const cartList = document.getElementById('cartList');
-    const totalAmountElement = document.getElementById('totalAmount');
-    const checkoutButton = document.getElementById('checkout');
-    const voiceBtn = document.getElementById('voiceBtn');
-    const voiceText = document.getElementById('voiceText');
+    const elements = {
+        darkModeToggle: document.getElementById('darkModeToggle'),
+        searchInput: document.getElementById('searchInput'),
+        menuItems: document.getElementById('menuItems'),
+        categories: document.querySelectorAll('.menu-category'),
+        cartList: document.getElementById('cartList'),
+        totalAmount: document.getElementById('totalAmount'),
+        checkout: document.getElementById('checkout'),
+        voiceBtn: document.getElementById('voiceBtn'),
+        voiceText: document.getElementById('voiceText')
+    };
 
-    // State
-    let isDarkMode = false;
     let cart = {};
-    let totalAmount = 0;
+    let total = 0;
 
-    // Menu Data (replace with backend API in production)
-    const menuItems = [
-        { category: 'Starters', name: 'Samosa', price: 50, image: 'samosa.jpg' },
-        { category: 'Starters', name: 'Paneer Tikka', price: 150, image: 'paneer_tikka.jpg' },
-        { category: 'Main Course', name: 'Butter Chicken', price: 300, image: 'butter_chicken.jpg' },
-        { category: 'Desserts', name: 'Gulab Jamun', price: 100, image: 'gulab_jamun.jpg' },
-        { category: 'Beverages', name: 'Lassi', price: 60, image: 'lassi.jpg' }
+    const menuData = [
+        { category: 'Starters', name: 'Samosa', price: 50, image: 'https://images.unsplash.com/photo-1601050690597-df0563f85136' },
+        { category: 'Starters', name: 'Paneer Tikka', price: 150, image: 'https://images.unsplash.com/photo-1596797038530-2c107179d478' },
+        { category: 'Main Course', name: 'Butter Chicken', price: 300, image: 'https://images.unsplash.com/photo-1603894584373-2d63e81eb3dc' },
+        { category: 'Desserts', name: 'Gulab Jamun', price: 100, image: 'https://images.unsplash.com/photo-1624194201968-5586f8c6e4c1' },
+        { category: 'Beverages', name: 'Lassi', price: 60, image: 'https://images.unsplash.com/photo-1626502421748-7b8647830b33' }
     ];
 
-    // Dark Mode Toggle
-    darkModeToggle.addEventListener('click', () => {
-        isDarkMode = !isDarkMode;
-        body.classList.toggle('dark-mode');
-        darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-        localStorage.setItem('darkMode', isDarkMode); // Persist preference
+    // Dark Mode
+    elements.darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        elements.darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     });
-
-    // Restore Dark Mode Preference
     if (localStorage.getItem('darkMode') === 'true') {
-        isDarkMode = true;
-        body.classList.add('dark-mode');
-        darkModeToggle.textContent = '☀️';
+        document.body.classList.add('dark-mode');
+        elements.darkModeToggle.textContent = '☀️';
     }
 
-    // Search Functionality
-    searchInput.addEventListener('input', debounce(() => {
-        const query = searchInput.value.toLowerCase();
-        const filteredItems = menuItems.filter(item => item.name.toLowerCase().includes(query));
-        displayMenuItems(filteredItems);
-    }, 300));
-
-    // Category Filtering
-    categories.forEach(category => {
-        category.addEventListener('click', () => {
-            const selectedCategory = category.textContent;
-            const filteredItems = selectedCategory === 'All' 
-                ? menuItems 
-                : menuItems.filter(item => item.category === selectedCategory);
-            displayMenuItems(filteredItems);
-        });
-    });
-
-    // Display Menu Items
-    function displayMenuItems(items) {
-        menuItemsContainer.innerHTML = '';
-        items.forEach(item => {
-            const menuItemElement = document.createElement('div');
-            menuItemElement.classList.add('menu-card');
-            menuItemElement.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" loading="lazy">
-                <h3>${item.name}</h3>
-                <p class="price">₹${item.price}</p>
-                <div class="quantity-control">
-                    <button class="quantity-btn decrease" data-name="${item.name}">-</button>
-                    <span id="qty-${item.name}" class="quantity">${cart[item.name] || 0}</span>
-                    <button class="quantity-btn increase" data-name="${item.name}">+</button>
-                </div>
-            `;
-            menuItemsContainer.appendChild(menuItemElement);
-        });
+    // Populate Menu
+    function populateMenu(filter = '') {
+        elements.menuItems.innerHTML = '';
+        menuData
+            .filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
+            .forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" loading="lazy">
+                    <h3>${item.name}</h3>
+                    <p class="price">₹${item.price}</p>
+                    <div class="quantity-control">
+                        <button class="quantity-btn decrease" data-name="${item.name}">-</button>
+                        <span class="quantity" id="qty-${item.name}">${cart[item.name] || 0}</span>
+                        <button class="quantity-btn increase" data-name="${item.name}">+</button>
+                    </div>
+                `;
+                elements.menuItems.appendChild(card);
+            });
         attachCartListeners();
     }
 
-    // Attach Cart Event Listeners
+    // Cart Listeners
     function attachCartListeners() {
-        document.querySelectorAll('.increase').forEach(button => {
-            button.addEventListener('click', () => {
-                addToCart(button.dataset.name);
+        document.querySelectorAll('.increase').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const name = btn.dataset.name;
+                cart[name] = (cart[name] || 0) + 1;
+                updateCart();
+                showAlert(`${name} added to cart!`);
             });
         });
-        document.querySelectorAll('.decrease').forEach(button => {
-            button.addEventListener('click', () => {
-                removeFromCart(button.dataset.name);
+        document.querySelectorAll('.decrease').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const name = btn.dataset.name;
+                if (cart[name] > 0) {
+                    cart[name]--;
+                    if (cart[name] === 0) delete cart[name];
+                    updateCart();
+                    showAlert(`${name} removed from cart!`);
+                }
             });
         });
     }
 
-    // Add to Cart
-    function addToCart(itemName) {
-        if (!cart[itemName]) cart[itemName] = 0;
-        cart[itemName]++;
-        updateCart();
-        showAlert(`${itemName} added to cart!`);
-    }
-
-    // Remove from Cart
-    function removeFromCart(itemName) {
-        if (cart[itemName] && cart[itemName] > 0) {
-            cart[itemName]--;
-            if (cart[itemName] === 0) delete cart[itemName];
-            updateCart();
-            showAlert(`${itemName} removed from cart!`);
-        }
-    }
-
-    // Update Cart UI
+    // Update Cart
     function updateCart() {
-        cartList.innerHTML = '';
-        totalAmount = 0;
+        elements.cartList.innerHTML = '';
+        total = 0;
         for (const item in cart) {
-            const menuItem = menuItems.find(m => m.name === item);
+            const menuItem = menuData.find(m => m.name === item);
             const itemTotal = menuItem.price * cart[item];
-            totalAmount += itemTotal;
-            cartList.innerHTML += `<li>${item} x ${cart[item]} - ₹${itemTotal}</li>`;
-            const qtyElement = document.getElementById(`qty-${item}`);
-            if (qtyElement) qtyElement.textContent = cart[item];
+            total += itemTotal;
+            elements.cartList.innerHTML += `<li>${item} x${cart[item]} - ₹${itemTotal}</li>`;
+            document.getElementById(`qty-${item}`).textContent = cart[item];
         }
-        totalAmountElement.textContent = totalAmount;
+        elements.totalAmount.textContent = total;
     }
+
+    // Search
+    elements.searchInput.addEventListener('input', debounce(() => {
+        populateMenu(elements.searchInput.value);
+    }, 300));
+
+    // Categories
+    elements.categories.forEach(category => {
+        category.addEventListener('click', () => {
+            const cat = category.dataset.category;
+            populateMenu(cat === 'All' ? '' : '', cat === 'All' ? null : cat);
+        });
+    });
 
     // Checkout
-    checkoutButton.addEventListener('click', () => {
+    elements.checkout.addEventListener('click', () => {
         if (Object.keys(cart).length === 0) {
             showAlert('Your cart is empty!');
         } else {
-            showAlert(`Order placed successfully! Total: ₹${totalAmount}`);
+            showAlert(`Order placed! Total: ₹${total}`);
             cart = {};
             updateCart();
+            populateMenu();
         }
     });
 
     // Voice Ordering
-    voiceBtn.addEventListener('click', () => {
+    elements.voiceBtn.addEventListener('click', () => {
         if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
             recognition.start();
-            voiceText.textContent = 'Listening...';
-            recognition.onresult = (event) => {
-                const voiceOrder = event.results[0][0].transcript.toLowerCase();
-                voiceText.textContent = `You said: ${voiceOrder}`;
-                const matchedItem = menuItems.find(item => 
-                    item.name.toLowerCase().includes(voiceOrder)
-                );
-                if (matchedItem) {
-                    addToCart(matchedItem.name);
+            elements.voiceText.textContent = 'Listening...';
+            recognition.onresult = event => {
+                const order = event.results[0][0].transcript.toLowerCase();
+                elements.voiceText.textContent = `You said: ${order}`;
+                const item = menuData.find(i => i.name.toLowerCase().includes(order));
+                if (item) {
+                    cart[item.name] = (cart[item.name] || 0) + 1;
+                    updateCart();
+                    showAlert(`${item.name} added to cart!`);
                 } else {
-                    showAlert('Item not found. Try again!');
+                    showAlert('Item not found!');
                 }
             };
-            recognition.onerror = () => {
-                voiceText.textContent = 'Voice recognition failed.';
-                showAlert('Voice recognition error!');
-            };
-            recognition.onend = () => {
-                voiceText.textContent = 'Say a food name to add to cart.';
-            };
+            recognition.onend = () => elements.voiceText.textContent = 'Say a food name to add to cart.';
         } else {
-            showAlert('Voice recognition not supported in your browser.');
+            showAlert('Voice recognition not supported.');
         }
     });
 
-    // Alert Popup
+    // Alert
     function showAlert(message) {
         const alert = document.createElement('div');
         alert.className = 'alert';
@@ -177,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => alert.remove(), 2000);
     }
 
-    // Debounce Function for Search
+    // Debounce
     function debounce(func, delay) {
         let timeout;
         return (...args) => {
@@ -187,26 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial Load
-    displayMenuItems(menuItems);
+    populateMenu();
 
-    // PWA Service Worker Registration (Add sw.js in production)
+    // PWA
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log('Service Worker Registered'))
-            .catch(err => console.error('Service Worker Registration Failed:', err));
+        navigator.serviceWorker.register('/sw.js').then(() => console.log('Service Worker Registered'));
     }
-});
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open('foodrush-v1').then(cache => {
-            return cache.addAll(['/index.html', '/styles.css', '/script.js']);
-        })
-    );
-});
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
-    );
 });

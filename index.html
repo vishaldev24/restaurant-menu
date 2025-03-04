@@ -4,61 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a1a1a">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <title>Classic FoodRush - Order Now</title>
+    <title>FoodRush - Taste the Future</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Classic FoodRush</h1>
-        <div>
+    <header>
+        <h1>FoodRush</h1>
+        <div class="header-actions">
             <button id="voiceBtn" class="voice-btn">🎤 Voice Order</button>
             <button id="darkModeToggle">🌙</button>
         </div>
-    </div>
+    </header>
+    <section class="hero">
+        <h2>Order Delicious Meals Now!</h2>
+        <p id="voiceText">Say a food name to add to cart.</p>
+    </section>
     <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search food items...">
-        <button id="searchBtn">Search</button>
+        <input type="text" id="searchInput" placeholder="Search for food...">
     </div>
     <div class="menu-categories">
-        <button class="menu-category" data-category="Chef's Specials">Chef's Specials</button>
-        <button class="menu-category" data-category="Appetizers">Appetizers</button>
-        <button class="menu-category" data-category="Soups and Salads">Soups and Salads</button>
-        <button class="menu-category" data-category="Main Courses">Main Courses</button>
-        <button class="menu-category" data-category="Beer">Beer</button>
-        <button class="menu-category" data-category="Sandwiches and Burgers">Sandwiches and Burgers</button>
-        <button class="menu-category" data-category="Pizza">Pizza</button>
-        <button class="menu-category" data-category="Biryani">Biryani</button>
+        <button class="menu-category" data-category="All">All</button>
+        <button class="menu-category" data-category="Starters">Starters</button>
+        <button class="menu-category" data-category="Main Course">Main Course</button>
         <button class="menu-category" data-category="Desserts">Desserts</button>
         <button class="menu-category" data-category="Beverages">Beverages</button>
     </div>
     <div class="container">
-        <div class="menu-grid" id="menuItems">
-            <!-- Sample Items (Dynamically populated via JS) -->
-            <div class="menu-item" data-category="Pizza">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeHImqYMfPZ61RijCPCxfM--6X0MaHvYgxxA&s" alt="Pizza">
-                <h3>Pizza Margherita</h3>
-                <p>₹250</p>
-                <button class="add-to-cart" data-item="Pizza Margherita" data-price="250">Add to Cart</button>
-            </div>
-            <div class="menu-item" data-category="Biryani">
-                <img src="data:image/jpeg;base64,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" alt="Biryani">
-                <h3>Chicken Biryani</h3>
-                <p>₹300</p>
-                <button class="add-to-cart" data-item="Chicken Biryani" data-price="300">Add to Cart</button>
-            </div>
-        </div>
+        <div class="menu-items" id="menuItems"></div>
         <div class="cart">
-            <h2>Shopping Cart</h2>
+            <h3>Your Cart</h3>
             <ul id="cartList"></ul>
             <p>Total: ₹<span id="totalAmount">0</span></p>
             <button id="checkout">Checkout</button>
         </div>
     </div>
     <footer>
-        <div>© 2025 Classic FoodRush. All rights reserved.</div>
+        <p>© 2025 FoodRush. All rights reserved.</p>
     </footer>
-
     <script src="script.js" defer></script>
 </body>
 </html>
