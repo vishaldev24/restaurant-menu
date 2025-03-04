@@ -1,20 +1,38 @@
+/* CSS Variables for Dark/Light Mode */
+:root {
+    --primary-color: #ff4b2b;
+    --secondary-color: #ff416c;
+    --bg-color: #f8f9fa;
+    --text-color: #333;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
 /* General Styles */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+    background: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
-    transition: background 0.3s ease-in-out;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    overflow-x: hidden;
 }
 
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background: linear-gradient(to right, #ff416c, #ff4b2b);
+    background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
     color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 h1 {
@@ -24,33 +42,46 @@ h1 {
 
 /* Dark Mode */
 .dark-mode {
-    background-color: #1a1a1a;
-    color: #eee;
+    --bg-color: #1a1a1a;
+    --text-color: #eee;
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 .dark-mode header {
     background: linear-gradient(to right, #333, #555);
 }
 
+.dark-mode .menu-card,
+.dark-mode .cart {
+    background: var(--card-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
 /* Search Bar */
 .search {
     text-align: center;
-    margin: 20px 0;
+    margin: 20px;
 }
 
 .search input {
     width: 60%;
+    max-width: 500px;
     padding: 10px;
     border-radius: 25px;
-    border: 2px solid #ff4b2b;
+    border: 2px solid var(--primary-color);
     outline: none;
     font-size: 16px;
-    transition: 0.3s;
+    background: var(--glass-bg);
+    color: var(--text-color);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 
 .search input:focus {
-    border-color: #ff416c;
+    border-color: var(--secondary-color);
     box-shadow: 0 0 10px rgba(255, 65, 108, 0.5);
+    transform: scale(1.02);
 }
 
 /* Menu Categories */
@@ -59,13 +90,19 @@ h1 {
     justify-content: center;
     gap: 15px;
     margin: 20px 0;
+    padding: 10px;
+    overflow-x: auto;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 .menu-category {
     padding: 10px 20px;
-    background: #ff4b2b;
+    background: var(--primary-color);
     color: white;
     border-radius: 20px;
+    border: none;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -78,30 +115,34 @@ h1 {
 /* Menu Items as Cards */
 .menu-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     padding: 20px;
     justify-items: center;
 }
 
 .menu-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 15px;
     padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
     text-align: center;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     width: 220px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }
 
 .menu-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px var(--shadow-color);
 }
 
 .menu-card img {
     width: 100%;
+    max-width: 120px;
     border-radius: 10px;
+    object-fit: cover;
 }
 
 .menu-card h3 {
@@ -110,7 +151,7 @@ h1 {
 }
 
 .price {
-    color: #ff4b2b;
+    color: var(--primary-color);
     font-weight: bold;
 }
 
@@ -123,17 +164,18 @@ h1 {
 }
 
 .quantity-btn {
-    background: #ff4b2b;
+    background: var(--primary-color);
     color: white;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.3s, transform 0.2s;
 }
 
 .quantity-btn:hover {
-    background: #ff416c;
+    background: var(--secondary-color);
+    transform: scale(1.05);
 }
 
 .quantity {
@@ -148,9 +190,13 @@ h1 {
     width: 90%;
     max-width: 400px;
     padding: 20px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    position: sticky;
+    top: 100px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 .cart h3 {
@@ -167,7 +213,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 5px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid rgba(221, 221, 221, 0.5);
 }
 
 /* Voice Ordering */
@@ -177,15 +223,47 @@ h1 {
 }
 
 #voiceBtn {
-    background: #ff4b2b;
+    background: var(--primary-color);
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.3s, transform 0.2s;
 }
 
 #voiceBtn:hover {
-    background: #ff416c;
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Alert Animation */
+.alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    margin-top: 20px;
 }
