@@ -15,7 +15,6 @@ body {
     margin: 0;
     padding: 0;
     transition: all 0.3s ease;
-    overflow-x: hidden;
 }
 
 body.dark-mode {
@@ -47,7 +46,7 @@ header {
 }
 
 .search-bar {
-    padding: 20px 0;
+    padding: 20px;
 }
 
 .search-bar input {
@@ -82,7 +81,7 @@ header {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
     max-width: 1200px;
-    padding-bottom: 100px;
+    padding-bottom: 120px;
 }
 
 .menu-card {
@@ -91,7 +90,7 @@ header {
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 12px var(--shadow-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     animation: slideUp 0.5s ease;
 }
 
@@ -109,7 +108,12 @@ header {
 
 .menu-card h3 {
     margin: 12px 0;
-    font-size: 20px;
+    font-size: 18px;
+}
+
+.menu-card .category {
+    font-size: 14px;
+    color: #718096;
 }
 
 .price {
@@ -191,7 +195,8 @@ header {
     transform: scale(1.05);
 }
 
-.fab-container {
+.mobile-fab-container {
+    display: none;
     position: fixed;
     bottom: 20px;
     left: 50%;
@@ -217,7 +222,7 @@ header {
     transform: scale(1.1);
 }
 
-.category-popup {
+.category-dialer {
     display: none;
     position: absolute;
     bottom: 80px;
@@ -225,35 +230,33 @@ header {
     transform: translateX(-50%);
     background: var(--glass-bg);
     padding: 20px;
-    border-radius: 30px 30px 0 0;
+    border-radius: 50%;
     box-shadow: 0 -4px 12px var(--shadow-color);
     backdrop-filter: blur(12px);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 90%;
-    max-width: 500px;
-    justify-content: center;
-    animation: slideUpPopup 0.4s ease;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    animation: dialerFadeIn 0.5s ease;
 }
 
-.category-popup.show {
-    display: flex;
+.category-dialer.show {
+    display: block;
 }
 
-.menu-category {
+.category-dialer .menu-category {
+    position: absolute;
     padding: 8px 16px;
     background: var(--primary-color);
     color: white;
     border-radius: 20px;
-    border: none;
     cursor: pointer;
     transition: all 0.2s ease;
+    transform-origin: center;
 }
 
-.menu-category:hover, .menu-category.active {
+.category-dialer .menu-category:hover {
     background: var(--secondary-color);
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .voice-text {
@@ -279,7 +282,6 @@ header {
     color: white;
     box-shadow: 0 4px 12px var(--shadow-color);
     animation: bounceIn 0.5s ease, fadeOut 0.5s ease 1.5s forwards;
-    z-index: 101;
 }
 
 .alert.added { background: #48BB78; }
@@ -292,9 +294,9 @@ header {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideUpPopup {
-    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+@keyframes dialerFadeIn {
+    from { opacity: 0; clip-path: circle(0% at 50% 100%); }
+    to { opacity: 1; clip-path: circle(100% at 50% 100%); }
 }
 
 @keyframes bounceIn {
@@ -315,6 +317,7 @@ footer {
 }
 
 @media (max-width: 768px) {
+    .mobile-fab-container { display: block; }
     .container { flex-direction: column; }
     .cart { 
         width: 90%; 
