@@ -12,21 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isDarkMode = false;
     let totalAmount = 0;
-    let cart = [];
+    let cart = {};
 
     const menuItems = [
-        { category: 'Starters', name: 'Samosa', price: 50 },
-        { category: 'Starters', name: 'Paneer Tikka', price: 150 },
-        { category: 'Starters', name: 'Chicken 65', price: 200 },
-        { category: 'Main Course', name: 'Butter Chicken', price: 300 },
-        { category: 'Main Course', name: 'Paneer Butter Masala', price: 250 },
-        { category: 'Main Course', name: 'Biryani', price: 180 },
-        { category: 'Desserts', name: 'Gulab Jamun', price: 100 },
-        { category: 'Desserts', name: 'Rasgulla', price: 120 },
-        { category: 'Desserts', name: 'Ice Cream', price: 80 },
-        { category: 'Beverages', name: 'Lassi', price: 60 },
-        { category: 'Beverages', name: 'Masala Chai', price: 40 },
-        { category: 'Beverages', name: 'Cold Coffee', price: 100 }
+        { category: 'Starters', name: 'Samosa', price: 50, image: 'samosa.jpg' },
+        { category: 'Starters', name: 'Paneer Tikka', price: 150, image: 'paneer_tikka.jpg' },
+        { category: 'Main Course', name: 'Butter Chicken', price: 300, image: 'butter_chicken.jpg' },
+        { category: 'Desserts', name: 'Gulab Jamun', price: 100, image: 'gulab_jamun.jpg' },
+        { category: 'Beverages', name: 'Lassi', price: 60, image: 'lassi.jpg' }
     ];
 
     darkModeToggle.addEventListener('click', () => {
@@ -43,8 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     categories.forEach(category => {
         category.addEventListener('click', () => {
-            categories.forEach(cat => cat.classList.remove('active-category'));
-            category.classList.add('active-category');
             const selectedCategory = category.textContent;
             const filteredItems = menuItems.filter(item => item.category === selectedCategory);
             displayMenuItems(filteredItems);
@@ -55,21 +46,45 @@ document.addEventListener('DOMContentLoaded', () => {
         menuItemsContainer.innerHTML = '';
         items.forEach(item => {
             const menuItemElement = document.createElement('div');
-            menuItemElement.classList.add('menu-item', 'fade-in');
-            menuItemElement.textContent = `${item.name} - ₹${item.price}`;
-            menuItemElement.addEventListener('click', () => {
-                addToCart(item.name, item.price);
-            });
+            menuItemElement.classList.add('menu-card');
+            menuItemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <h3>${item.name}</h3>
+                <p>₹${item.price}</p>
+                <div class="quantity-control">
+                    <button class="decrease" data-name="${item.name}">-</button>
+                    <span id="qty-${item.name}">0</span>
+                    <button class="increase" data-name="${item.name}">+</button>
+                </div>
+            `;
             menuItemsContainer.appendChild(menuItemElement);
+        });
+        attachCartListeners();
+    }
+
+    function attachCartListeners() {
+        document.querySelectorAll('.increase').forEach(button => {
+            button.addEventListener('click', () => {
+                addToCart(button.dataset.name);
+            });
+        });
+        document.querySelectorAll('.decrease').forEach(button => {
+            button.addEventListener('click', () => {
+                removeFromCart(button.dataset.name);
+            });
         });
     }
 
-    function addToCart(itemName, itemPrice) {
-        const existingItem = cart.find(item => item.name === itemName);
-        if (existingItem) {
-            existingItem.quantity++;
-        } else {
-            cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+    function addToCart(itemName) {
+        if (!cart[itemName]) cart[itemName] = 0;
+        cart[itemName]++;
+        updateCart();
+    }
+
+    function removeFromCart(itemName) {
+        if (cart[itemName] && cart[itemName] > 0) {
+            cart[itemName]--;
+            if (cart[itemName] === 0) delete cart[itemName];
         }
         updateCart();
     }
@@ -77,22 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCart() {
         cartList.innerHTML = '';
         totalAmount = 0;
-        cart.forEach(item => {
-            const cartItemElement = document.createElement('li');
-            cartItemElement.classList.add('cart-item', 'pop-in');
-            cartItemElement.textContent = `${item.name} x ${item.quantity} - ₹${item.price * item.quantity}`;
-            cartList.appendChild(cartItemElement);
-            totalAmount += item.price * item.quantity;
-        });
+        for (const item in cart) {
+            const menuItem = menuItems.find(m => m.name === item);
+            totalAmount += menuItem.price * cart[item];
+            cartList.innerHTML += `<li>${item} x ${cart[item]} - ₹${menuItem.price * cart[item]}</li>`;
+            document.getElementById(`qty-${item}`).textContent = cart[item];
+        }
         totalAmountElement.textContent = totalAmount;
     }
 
     checkoutButton.addEventListener('click', () => {
-        if (cart.length === 0) {
+        if (Object.keys(cart).length === 0) {
             alert('Your cart is empty!');
         } else {
             alert(`Order placed successfully! Total amount: ₹${totalAmount}`);
-            cart = [];
+            cart = {};
             updateCart();
         }
     });
@@ -101,17 +115,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'en-US';
         recognition.start();
-        voiceText.textContent = 'Listening...';
-
         recognition.onresult = (event) => {
             const voiceOrder = event.results[0][0].transcript;
             voiceText.textContent = `You said: ${voiceOrder}`;
-
-            const matchedItem = menuItems.find(item => voiceOrder.toLowerCase().includes(item.name.toLowerCase()));
+            const matchedItem = menuItems.find(item => item.name.toLowerCase() === voiceOrder.toLowerCase());
             if (matchedItem) {
-                addToCart(matchedItem.name, matchedItem.price);
+                addToCart(matchedItem.name);
             } else {
-                voiceText.textContent = 'Item not found on the menu!';
+                alert('Item not found on the menu!');
             }
         };
     });
