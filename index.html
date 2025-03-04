@@ -11,25 +11,14 @@
 <body>
     <header>
         <h1>FoodRush</h1>
-        <div class="header-actions">
-            <button id="voiceBtn" class="voice-btn">🎤</button>
-            <button id="darkModeToggle">🌙</button>
-        </div>
+        <button id="darkModeToggle">🌙</button>
     </header>
     <section class="hero">
         <h2>Savor Every Bite</h2>
-        <p id="voiceText">Say a food name to add to cart</p>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Find your craving...">
+        </div>
     </section>
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Find your craving...">
-    </div>
-    <div class="menu-categories">
-        <button class="menu-category" data-category="All">All</button>
-        <button class="menu-category" data-category="Starters">Starters</button>
-        <button class="menu-category" data-category="Main Course">Main Course</button>
-        <button class="menu-category" data-category="Desserts">Desserts</button>
-        <button class="menu-category" data-category="Beverages">Beverages</button>
-    </div>
     <div class="container">
         <div class="menu-items" id="menuItems"></div>
         <div class="cart">
@@ -39,6 +28,18 @@
             <button id="checkout">Place Order</button>
         </div>
     </div>
+    <div class="fab-container">
+        <button id="fab" class="fab">🎤</button>
+        <div id="categoryPopup" class="category-popup">
+            <button class="menu-category" data-category="All">All</button>
+            <button class="menu-category" data-category="Indian">Indian</button>
+            <button class="menu-category" data-category="Chinese">Chinese</button>
+            <button class="menu-category" data-category="Continental">Continental</button>
+            <button class="menu-category" data-category="Italian">Italian</button>
+            <button class="menu-category" data-category="French">French</button>
+        </div>
+    </div>
+    <div id="voiceText" class="voice-text">Say a food name to add to cart</div>
     <footer>
         <p>© 2025 FoodRush. All rights reserved.</p>
     </footer>
