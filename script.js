@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutButton = document.getElementById('checkout');
     const voiceBtn = document.getElementById('voiceBtn');
     const voiceText = document.getElementById('voiceText');
-
+    
     let isDarkMode = false;
     let totalAmount = 0;
-
+    
     const menuItems = [
         { category: 'Starters', name: 'Samosa', price: 50 },
         { category: 'Starters', name: 'Paneer Tikka', price: 150 },
@@ -27,40 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
         { category: 'Beverages', name: 'Masala Chai', price: 40 },
         { category: 'Beverages', name: 'Cold Coffee', price: 100 }
     ];
-
-    // Dark Mode Toggle
+    
     darkModeToggle.addEventListener('click', () => {
         isDarkMode = !isDarkMode;
-        if (isDarkMode) {
-            body.classList.add('dark-mode');
-            darkModeToggle.textContent = '☀️';
-        } else {
-            body.classList.remove('dark-mode');
-            darkModeToggle.textContent = '🌙';
-        }
+        body.classList.toggle('dark-mode');
+        darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
     });
-
-    // Search Functionality
+    
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.toLowerCase();
         const filteredItems = menuItems.filter(item => item.name.toLowerCase().includes(query));
         displayMenuItems(filteredItems);
     });
-
-    // Display Menu Items based on category
+    
     categories.forEach(category => {
         category.addEventListener('click', () => {
+            categories.forEach(cat => cat.classList.remove('active-category'));
+            category.classList.add('active-category');
             const selectedCategory = category.textContent;
             const filteredItems = menuItems.filter(item => item.category === selectedCategory);
             displayMenuItems(filteredItems);
         });
     });
-
+    
     function displayMenuItems(items) {
         menuItemsContainer.innerHTML = '';
         items.forEach(item => {
             const menuItemElement = document.createElement('div');
-            menuItemElement.classList.add('menu-item');
+            menuItemElement.classList.add('menu-item', 'fade-in');
             menuItemElement.textContent = `${item.name} - ₹${item.price}`;
             menuItemElement.addEventListener('click', () => {
                 addToCart(item.name, item.price);
@@ -68,16 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItemsContainer.appendChild(menuItemElement);
         });
     }
-
+    
     function addToCart(itemName, itemPrice) {
         const cartItemElement = document.createElement('li');
+        cartItemElement.classList.add('cart-item', 'pop-in');
         cartItemElement.textContent = `${itemName} - ₹${itemPrice}`;
         cartList.appendChild(cartItemElement);
         totalAmount += itemPrice;
         totalAmountElement.textContent = totalAmount;
     }
-
-    // Checkout functionality
+    
     checkoutButton.addEventListener('click', () => {
         if (cartList.childNodes.length === 0) {
             alert('Your cart is empty!');
@@ -88,24 +82,25 @@ document.addEventListener('DOMContentLoaded', () => {
             totalAmountElement.textContent = totalAmount;
         }
     });
-
-    // Voice Ordering (Example implementation, requires further development)
+    
     voiceBtn.addEventListener('click', () => {
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'en-US';
         recognition.start();
+        voiceText.textContent = 'Listening...';
+        
         recognition.onresult = (event) => {
             const voiceOrder = event.results[0][0].transcript;
             voiceText.textContent = `You said: ${voiceOrder}`;
-            const matchedItem = menuItems.find(item => item.name.toLowerCase() === voiceOrder.toLowerCase());
+            
+            const matchedItem = menuItems.find(item => voiceOrder.toLowerCase().includes(item.name.toLowerCase()));
             if (matchedItem) {
                 addToCart(matchedItem.name, matchedItem.price);
             } else {
-                alert('Item not found on the menu!');
+                voiceText.textContent = 'Item not found on the menu!';
             }
         };
     });
-
-    // Initial display of all items
+    
     displayMenuItems(menuItems);
 });
