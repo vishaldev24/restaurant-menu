@@ -1,0 +1,246 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    background: linear-gradient(135deg, #0f0f0f, #1e1e1e);
+    color: #e0e0e0;
+    font-family: 'Orbitron', sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: linear-gradient(135deg, #2f0053, #006994);
+    box-shadow: 0 10px 50px rgba(0, 255, 255, 0.4);
+    border-bottom: 3px solid #444;
+}
+
+header h1 {
+    font-size: 4rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.4);
+    animation: neonGlow 1.5s infinite alternate;
+}
+
+@keyframes neonGlow {
+    0% {
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 25px rgba(0, 255, 255, 0.6);
+    }
+    100% {
+        text-shadow: 0 0 35px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.8);
+    }
+}
+
+/* Dark Mode Button */
+#darkModeToggle {
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#darkModeToggle:hover {
+    transform: rotate(180deg);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+/* Search Section */
+.search {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#searchInput {
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 25px;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    width: 50%;
+}
+
+/* Menu Section */
+.menu {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 90%;
+}
+
+.menu-category {
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    transition: all 0.3s ease, transform 0.3s ease;
+}
+
+.menu-category:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+}
+
+/* Menu Items */
+.menu-items {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    width: 90%;
+}
+
+.menu-items .menu-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-items .menu-item:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 35px rgba(0, 255, 255, 0.7);
+}
+
+/* Cart Section */
+.cart {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.4);
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.cart h3 {
+    margin-bottom: 15px;
+}
+
+#cartList {
+    list-style-type: none;
+    width: 100%;
+}
+
+#cartList li {
+    background: rgba(0, 255, 255, 0.3);
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 1.3rem;
+}
+
+.cart p {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+/* Checkout Button */
+#checkout {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #ff007f, #00bcd4);
+    border: none;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#checkout:hover {
+    background: #00bcd4;
+}
+
+/* Voice Ordering */
+#voiceOrdering {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#voiceBtn {
+    background: linear-gradient(45deg, #ff007f, #00bcd4);
+    padding: 20px;
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+#voiceBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+
+#voiceText {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    color: #00bcd4;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #bbb;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: #111;
+    color: #e0e0e0;
+}
+
+body.dark-mode header {
+    background: linear-gradient(135deg, #2f0053, #006994);
+}
+
+body.dark-mode .menu-category {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .menu-items .menu-item {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .cart {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode footer {
+    color: #ccc;
+}

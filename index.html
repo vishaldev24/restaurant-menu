@@ -1,0 +1,47 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Restaurant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Futuristic Restaurant</h1>
+        <button id="darkModeToggle">🌙</button>
+    </header>
+
+    <main>
+        <section class="search">
+            <input type="text" id="searchInput" placeholder="Search menu...">
+        </section>
+        <section class="menu">
+            <div class="menu-category" id="category1">Starters</div>
+            <div class="menu-category" id="category2">Main Course</div>
+            <div class="menu-category" id="category3">Desserts</div>
+            <div class="menu-category" id="category4">Beverages</div>
+        </section>
+
+        <section class="menu-items">
+            <!-- Dynamically populated items -->
+        </section>
+
+        <section class="cart">
+            <h3>Your Cart</h3>
+            <ul id="cartList"></ul>
+            <p>Total: ₹<span id="totalAmount">0</span></p>
+            <button id="checkout">Checkout</button>
+        </section>
+
+        <section id="voiceOrdering">
+            <button id="voiceBtn">🎤 Voice Ordering</button>
+            <p id="voiceText">Say your order...</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made with ❤️ for a futuristic experience</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
